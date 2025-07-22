@@ -10,8 +10,6 @@ public class UI : MonoBehaviour
 
     public GameObject winScreen;
 
-    private const int NUM_GOAL = 5;
-
     private float winTimer = -1;
 
     private Dictionary<SEED_TYPE, TMP_Text> _labelDict;
@@ -39,19 +37,20 @@ public class UI : MonoBehaviour
         string finalString;
         foreach (KeyValuePair<SEED_TYPE, int> score in newScore)
         {
-            if (score.Value >= NUM_GOAL)
+            if (score.Value >= Global.WIN_GOAL)
                 finalString = "<color=#FFF>";
             else
                 finalString = "<color=#DDD>";
             finalString += _prefixDict[score.Key] + " ";
-            finalString += score.Value.ToString () + "/ 5</color>";
+            finalString += score.Value.ToString () + " / " + Global.WIN_GOAL.ToString ();
+            finalString += "</color>";
             _labelDict[score.Key].text = finalString;
         }
     }
 
     public void ShowWin ()
     {
-        winTimer = 5f;
+        winTimer = Global.WIN_TIME;
         winScreen.SetActive (true);
     }
 

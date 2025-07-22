@@ -1,15 +1,54 @@
 using UnityEngine;
+using System.Collections;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IHasDirection
 {
-    public DIRECTION facingDirection = DIRECTION.NONE;
     public Transform toolParent;
+    public PlayerGraphics graphics;
+    public PlayerController controller;
+
     private Tool heldTool = null;
+    private Vector3 _startPos = Vector3.zero;
+
+    private DIRECTION _facingDirection = DIRECTION.NONE;
+    OnDirectionChange directionChanged;
+
+    private void Start ()
+    {
+        _startPos = transform.localPosition;
+    }
 
     public void Reset ()
     {
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = _startPos;
         ResetTool ();
+    }
+
+    public void OnGameWin ()
+    {
+        SetDirection (DIRECTION.DOWN);
+        controller.enabled = false;
+        StartCoroutine (ReactivateController());
+    }
+
+    private IEnumerator ReactivateController ()
+    {
+        yield return new WaitForSeconds (Global.WIN_TIME);
+        controller.enabled = true;
+    }
+
+    public void ResetTool ()
+    {
+        if (heldTool != null)
+        {
+            heldTool.ResetTool ();
+            heldTool = null;
+        }
+    }
+
+    public Tool GetHeldTool ()
+    {
+        return heldTool;
     }
 
     public void OnToolCollision (Tool collidedTool)
@@ -28,17 +67,19 @@ public class Player : MonoBehaviour
         heldTool.transform.localPosition = Vector3.zero;
     }
 
-    public Tool GetHeldTool ()
+    public void AddDirectionListener (OnDirectionChange listener)
     {
-        return heldTool;
+        directionChanged += listener;
     }
 
-    public void ResetTool ()
+    public DIRECTION GetDirection ()
     {
-        if (heldTool != null)
-        {
-            heldTool.ResetTool ();
-            heldTool = null;
-        }
+        return _facingDirection;
+    }
+
+    public void SetDirection (DIRECTION newDirection)
+    {
+        _facingDirection = newDirection;
+        directionChanged?.Invoke (_facingDirection);
     }
 }

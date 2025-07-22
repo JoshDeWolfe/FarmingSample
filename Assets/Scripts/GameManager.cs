@@ -5,15 +5,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public UI ui;
-    public Player _playerRef;
+    public Player playerRef;
 
-    private const int NUM_GOAL = 5;
+    public OnGameWin onGameWin;
 
     private Dictionary<SEED_TYPE, int> _currentScore;
 
     void Start()
     {
         instance = this;
+        onGameWin += playerRef.OnGameWin;
         ResetGame ();
     }
 
@@ -38,7 +39,7 @@ public class GameManager : MonoBehaviour
             }
         }
         UpdateScore ();
-        _playerRef.Reset ();
+        playerRef.Reset ();
     }
 
     public void OnPlantHarvested (SEED_TYPE seedType)
@@ -53,7 +54,7 @@ public class GameManager : MonoBehaviour
 
         foreach (KeyValuePair<SEED_TYPE, int> score in _currentScore)
         {
-            if (score.Value < NUM_GOAL)
+            if (score.Value < Global.WIN_GOAL)
             {
                 hasWon = false;
                 break;
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour
         {
             ui.ShowWin ();
             ResetGame ();
+            onGameWin?.Invoke ();
         }
     }
 }

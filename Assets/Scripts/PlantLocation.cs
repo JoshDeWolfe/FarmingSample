@@ -22,15 +22,15 @@ public class PlantLocation : MonoBehaviour
     private enum PLANT_STATE { NONE, UNPLANTED, GROWING, HARVESTABLE }
     private PLANT_STATE _currentState = PLANT_STATE.NONE;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer> ();
         ResetPlant ();
+        GameManager.instance.onGameWin += ResetPlant;
     }
 
-    private void ResetPlant ()
+    public void ResetPlant ()
     {
         _currentState = PLANT_STATE.UNPLANTED;
         _plantedSeed = SEED_TYPE.NONE;
@@ -140,7 +140,6 @@ public class PlantLocation : MonoBehaviour
         ResetPlant ();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (_currentState == PLANT_STATE.GROWING)
