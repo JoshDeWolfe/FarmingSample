@@ -11,7 +11,8 @@ public class PlantLocation : MonoBehaviour
     public Sprite cabbageGraphic;
     public Sprite carrotGraphic;
 
-    public const float SEED_TIME = 3f;
+    public const float SEED_TIME = 5f;
+    public const float RAND_RANGE = 1.5f;
 
     private int _seedStep = 0;
     private bool _needsWater = false;
@@ -110,7 +111,7 @@ public class PlantLocation : MonoBehaviour
     private void SetGrowingStep (int newStep)
     {
         _seedStep = newStep;
-        _seedTimer = SEED_TIME;
+        _seedTimer = Random.Range(SEED_TIME - RAND_RANGE, SEED_TIME + RAND_RANGE);
         SetNeedsWater (true);
         spriteRenderer.sprite = growingGraphics[_seedStep];
     }
