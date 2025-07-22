@@ -12,7 +12,7 @@ public class PlantLocation : MonoBehaviour
     public Sprite carrotGraphic;
 
     public const float SEED_TIME = 5f;
-    public const float RAND_RANGE = 1.5f;
+    public const float RAND_RANGE = 3f;
 
     private int _seedStep = 0;
     private bool _needsWater = false;
